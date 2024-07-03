@@ -11,6 +11,7 @@ namespace HyprMpv
         extern std::string media_url;
         extern int use_vulkan;
 
+        bool resolve_url (std::string &url);
         int setup (int argc, char *argv[]);
     }
 
