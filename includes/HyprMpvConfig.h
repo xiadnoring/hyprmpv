@@ -6,10 +6,11 @@
 
 namespace HyprMpv
 {
-    extern std::string media_url;
-
     namespace Config
     {
+        extern std::string media_url;
+        extern int use_vulkan;
+
         int setup (int argc, char *argv[]);
     }
 

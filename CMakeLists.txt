@@ -6,6 +6,9 @@ set(CMAKE_CXX_STANDARD 26)
 find_package(PkgConfig REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Svg Quick Multimedia)
 
+include(CheckFunctionExists)
+check_function_exists(getopt HAVE_GETOPT)
+
 qt_standard_project_setup()
 
 qt_add_executable(${PROJECT_NAME} src/HyprMpvMain.cpp
@@ -22,5 +25,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt6::Quick
         Qt6::Multimedia
 )
+target_link_libraries(${PROJECT_NAME} ${GETOPT_LIBRARY})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ./includes)
