@@ -3,6 +3,8 @@
 #include <getopt.h>
 #include <filesystem>
 #include <regex>
+#include <QProcessEnvironment>
+
 #include "HyprMpvConfig.h"
 #include "HyprMpvUtils.h"
 
@@ -10,6 +12,8 @@ namespace fs = std::filesystem;
 
 std::string HyprMpv::Config::media_url;
 int HyprMpv::Config::use_vulkan = 0;
+int HyprMpv::Config::media_backend = HYPR_MPV_MEDIA_BACKEND_FFMPEG;
+int HyprMpv::Config::custom_qml = 1;
 
 QString HyprMpv::ConfigObject::get_media_url()
 {
@@ -39,8 +43,11 @@ int HyprMpv::Config::setup (int argc, char *argv[])
     static struct option long_options[] = {
         {"use-vulkan", no_argument, &use_vulkan, 1},
         {"no-use-vulkan", no_argument, &use_vulkan, 0},
+        {"use-gstreamer", no_argument, &media_backend, HYPR_MPV_MEDIA_BACKEND_GSTREAMER},
+        {"use-ffmpeg", no_argument, &media_backend, HYPR_MPV_MEDIA_BACKEND_FFMPEG},
         {"help", no_argument, nullptr, 'h'},
-        {"video", required_argument, nullptr, 'v'}
+        {"video", required_argument, nullptr, 'v'},
+        {"no-custom-qml", no_argument, &custom_qml, 0}
     };
 
     int prev_index = 1;
@@ -64,9 +71,20 @@ int HyprMpv::Config::setup (int argc, char *argv[])
         {
             case '?':
             case 'h':
-                printf("Hyprland Video Player\n");
-                printf(" -h - Help\n");
-                printf(" -v [URL] - Video URL\n");
+                printf("Usage: hyprmpv [options] [arguments]\n");
+
+                printf("Options:\n");
+                printf("    -h, --help            Show this help message and exit\n");
+                printf("    -v, --video <file>    Specify video file\n");
+                printf("    --use-vulkan          Say to use Vulkan Instance\n");
+                printf("    --no-use-vulkan       Say to don't use Vulkan API\n");
+                printf("    --use-gstreamer       Say to use GStreamer as Media Backend\n");
+                printf("    --use-ffmpeg          Say to use FFmpeg as Media Backend\n");
+                printf("    --no-custom-qml       Say to don't use custom qml scheme\n");
+
+                printf("\nExamples:\n");
+                printf("    hyprmpv --use-vulkan video.mp4\n");
+                printf("    hyprmpv video.webm --use-gstreamer --no-use-vulkan\n");
 
                 return -1;
             case 'v':
@@ -92,6 +110,21 @@ int HyprMpv::Config::setup (int argc, char *argv[])
     }
 
     debug ("Media: %s", media_url.data());
+
+    std::string media_backend_string;
+
+    switch (media_backend) {
+        case HYPR_MPV_MEDIA_BACKEND_GSTREAMER:
+            media_backend_string = "gstreamer";
+            break;
+        case HYPR_MPV_MEDIA_BACKEND_FFMPEG:
+            media_backend_string = "ffmpeg";
+            break;
+        default:
+            exit (0);
+    }
+
+    qputenv("QT_MEDIA_BACKEND", media_backend_string);
 
     return 0;
 }

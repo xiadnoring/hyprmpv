@@ -4,12 +4,17 @@
 #include <QObject>
 #include <QString>
 
+#define HYPR_MPV_MEDIA_BACKEND_GSTREAMER    0
+#define HYPR_MPV_MEDIA_BACKEND_FFMPEG       1
+
 namespace HyprMpv
 {
     namespace Config
     {
         extern std::string media_url;
         extern int use_vulkan;
+        extern int media_backend;
+        extern int custom_qml;
 
         bool resolve_url (std::string &url);
         int setup (int argc, char *argv[]);
