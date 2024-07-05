@@ -13,6 +13,6 @@ void HyprMpv::createConfig() {
     std::filesystem::create_directory(HyprMpv::homedir + "/.config/hyprmpv");
     if (!std::filesystem::exists(HyprMpv::homedir + "/.config/hyprmpv/theme.qml")) {
 //        std::filesystem::remove(HyprMpv::homedir + "/.config/hyprmpv/theme.qml");
-        std::filesystem::copy("../tests/theme.qml", HyprMpv::homedir + "/.config/hyprmpv");
+        std::filesystem::copy("../tests/theme.qml", HyprMpv::homedir + "/.config/hyprmpv", std::filesystem::copy_options::overwrite_existing);
     }
 }

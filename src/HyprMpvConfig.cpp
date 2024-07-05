@@ -22,18 +22,32 @@ QString HyprMpv::ConfigObject::get_media_url()
 
 bool HyprMpv::Config::resolve_url(std::string &url)
 {
-    std::regex url_regex (R"(^(https?|ftp|file)://[-\w0-9+&@#/%?=~_|!:,.;]*[-\w0-9+&@#/%=~_|]$)");
+    if (url.empty())
+    {
+        return false;
+    }
 
-    if (std::regex_match(url, url_regex))
-        return true;
+    try
+    {
+        std::regex url_regex (R"(^(https?|ftp|file)://[-\w0-9+&@#/%?=~_|!:,.;]*[-\w0-9+&@#/%=~_|]$)");
 
-    fs::path p (url);
+        if (std::regex_match(url, url_regex))
+            return true;
 
-    p = fs::absolute(p);
+        fs::path p (url);
 
-    url = p.string();
+        p = fs::absolute(p);
 
-    return fs::exists(p) && !fs::is_directory(p);
+        url = p.string();
+
+        return fs::exists(p) && !fs::is_directory(p);
+    }
+    catch (const std::exception &e)
+    {
+        debug(e.what());
+
+        return false;
+    }
 }
 
 int HyprMpv::Config::setup (int argc, char *argv[])

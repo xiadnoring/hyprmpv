@@ -30,6 +30,7 @@ ApplicationWindow
     Item
     {
         property bool ready: false
+        property var time_inactive: 1000
 
         id: root
         anchors.fill: parent
@@ -40,7 +41,7 @@ ApplicationWindow
         {
             NumberAnimation
             {
-                duration: 1500
+                duration: 1000
             }
         }
 
@@ -100,7 +101,7 @@ ApplicationWindow
         Timer
         {
             id: slider_hide_timer
-            interval: 3000
+            interval: root.time_inactive
             running: true
             repeat: false
             onTriggered: function () {
@@ -134,15 +135,26 @@ ApplicationWindow
             background: Rectangle
             {
                 implicitHeight: 8
-                color: "white"
+                color: "#131314"
                 radius: 10
+
+                MouseArea
+                {
+                    propagateComposedEvents: true
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered:
+                    {
+                        root.show_slider()
+                    }
+                }
             }
 
             Rectangle
             {
                 width: progressSlider.visualPosition * parent.width
                 height: parent.height
-                color: "#1D8BF8"
+                color: "#D5D3D3"
                 radius: 10
             }
 
@@ -178,7 +190,7 @@ ApplicationWindow
         MouseArea
         {
             propagateComposedEvents: true
-            z: -1
+            z: -2
             anchors.fill: parent
             onWheel: function (wheel)
             {

@@ -35,11 +35,11 @@ int HyprMpv::setup (int argc, char *argv[])
     std::string path_to_theme = HyprMpv::homedir + "/.config/hyprmpv/theme.qml";
     const QUrl url(path_to_theme.data());
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated, &app, [url](QObject *obj, const QUrl &objUrl)
-                     {
-                         if (!obj && url == objUrl)
-                             QCoreApplication::exit(-1);
-                     },
-                     Qt::QueuedConnection);
+     {
+         if (!obj && url == objUrl)
+             QCoreApplication::exit(-1);
+     },
+     Qt::QueuedConnection);
 
     engine.load(url);
 
