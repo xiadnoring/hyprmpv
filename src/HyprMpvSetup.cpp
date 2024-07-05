@@ -4,15 +4,18 @@
 #include <QVulkanInstance>
 #include <QQuickWindow>
 #include <QQmlComponent>
+#include <string>
 
 #include "HyprMpvUtils.h"
 #include "HyprMpvSetup.h"
 #include "HyprMpvConfig.h"
+#include "HyprMvpCreateConfig.h"
+
 
 static QVulkanInstance *vkInstance;
-
 int HyprMpv::setup (int argc, char *argv[])
 {
+    HyprMpv::createConfig();
     // setup configs
     if (HyprMpv::Config::setup (argc, argv) < 0)
     {
@@ -29,8 +32,8 @@ int HyprMpv::setup (int argc, char *argv[])
     qmlRegisterType <ConfigObject> ("HyprMpv", 1, 0, "HyprMpvConfig");
 
     QQuickWindow *window;
-
-    const QUrl url(u"/home/Timur/CLionProjects/hyprmpv/tests/theme.qml"_qs);
+    std::string path_to_theme = HyprMpv::homedir + "/.config/hyprmpv/theme.qml";
+    const QUrl url(path_to_theme.data());
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated, &app, [url](QObject *obj, const QUrl &objUrl)
                      {
                          if (!obj && url == objUrl)

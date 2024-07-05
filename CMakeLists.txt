@@ -17,7 +17,7 @@ qt_add_executable(${PROJECT_NAME} src/HyprMpvMain.cpp
         src/HyprMpvSetup.cpp
         includes/HyprMpvSetup.h
         src/HyprMpvConfig.cpp
-        includes/HyprMpvConfig.h)
+        includes/HyprMpvConfig.h src/HyprMvpCreateConfig.cpp includes/HyprMvpCreateConfig.h)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt6::Core
